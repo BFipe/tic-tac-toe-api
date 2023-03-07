@@ -6,3 +6,6 @@ services:
     build:
       context: .
       dockerfile: webapi-tic-tac-toe/Dockerfile
+
+  redisdb:
+    image: redis:alpine

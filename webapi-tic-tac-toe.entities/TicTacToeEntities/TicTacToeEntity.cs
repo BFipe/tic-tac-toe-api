@@ -16,6 +16,8 @@ namespace webapi_tic_tac_toe.entities.TicTacToeEntities
         public string ComputerSymbol { get; }
         public string PlayerSymbol { get; }
 
+        public bool GameFinished { get; set; }
+
         public TicTacToeEntity() 
         {
             Id = Guid.NewGuid().ToString();

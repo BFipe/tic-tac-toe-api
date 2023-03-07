@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using webapi_tic_tac_toe.business.BusinessDtos.TicTacToeDtos;
+using webapi_tic_tac_toe.business.Models.TicTacToe;
+using webapi_tic_tac_toe.business.Services.ComputerPlayingService;
 using webapi_tic_tac_toe.data.Repositories;
 using webapi_tic_tac_toe.exceptions;
 
@@ -16,24 +18,45 @@ namespace webapi_tic_tac_toe.business.Services.GameFieldService
         private readonly IMapper _mapper;
         private readonly ILogger<TicTacToeGame> _logger;
         private readonly ITicTacToeRepository _ticTacToeRepository;
+        private readonly ITicTacToeComputerService _computer;
 
-        public TicTacToeGame(IMapper mapper, ILogger<TicTacToeGame> logger, ITicTacToeRepository ticTacToeRepository)
+        public TicTacToeGame(IMapper mapper, ILogger<TicTacToeGame> logger, ITicTacToeRepository ticTacToeRepository, ITicTacToeComputerService computer)
         {
             _mapper = mapper;
             _logger = logger;
             _ticTacToeRepository = ticTacToeRepository;
+            _computer = computer;
         }
 
-        public async Task<TicTacToeDto> StartGame()
+        public async Task<TicTacToeResponceDto> StartGame()
         {
-            var game = _ticTacToeRepository.CreateGameAsync();
+            var game = await _ticTacToeRepository.CreateGameAsync();
 
-            var gameDto = _mapper.Map<TicTacToeDto>(game);
+            var gameDto = _mapper.Map<TicTacToeDatabaseModel>(game);
 
-            return gameDto;
+            var computerMovement = _computer.MakeComputerMove(gameDto.GameField, game.ComputerSymbol, game.PlayerSymbol);
+
+            if (computerMovement.IsPlayerWon == false
+                && computerMovement.IsComputerWon == false
+                && computerMovement.IsDraw == false)
+            {
+                return new TicTacToeResponceDto()
+                {
+                    Id = game.Id,
+                    GameField = computerMovement.GameField,
+                    IsComputerWon = computerMovement.IsComputerWon,
+                    IsPlayerWon = computerMovement.IsPlayerWon,
+                    IsDraw = computerMovement.IsDraw,
+                };
+            }
+
+            else
+            {
+                throw new CustomDevelopmentException($"Incorrect return while starting the game. id {game.Id}");
+            }
         }
 
-        public async Task<TicTacToeDto> MadeMove(TicTacToeDto playerBoard)
+        public async Task<TicTacToeResponceDto> MadeMove(TicTacToeGetDto playerBoard)
         {
             var databaseBoard = await _ticTacToeRepository.GetGameByIdAsync(playerBoard.Id);
 
@@ -44,21 +67,43 @@ namespace webapi_tic_tac_toe.business.Services.GameFieldService
                 throw new IncorrectGameFieldException();
             }
 
-            var storedBoard = _mapper.Map<TicTacToeDto>(databaseBoard);
+            CheckMove(playerBoard.GameField, databaseBoard.GameField, databaseBoard.PlayerSymbol);
 
-            var isCorrectMovement = CheckMove(playerBoard, storedBoard, databaseBoard.IsComputerFirst, databaseBoard.ComputerSymbol, databaseBoard.PlayerSymbol);
+            databaseBoard.GameField = playerBoard.GameField;
 
-            return null;
+            await _ticTacToeRepository.UpdateGameAsync(databaseBoard);
+
+            var computerMovement = _computer.MakeComputerMove(databaseBoard.GameField, databaseBoard.ComputerSymbol, databaseBoard.PlayerSymbol);
+
+            return new TicTacToeResponceDto()
+            {
+                Id = databaseBoard.Id,
+                GameField= computerMovement.GameField,
+                IsComputerWon = computerMovement.IsComputerWon,
+                IsPlayerWon= computerMovement.IsPlayerWon,
+                IsDraw = computerMovement.IsDraw,
+            };
         }
 
-        private bool CheckMove(TicTacToeDto playerBoard,
-            TicTacToeDto storedBoard,
-            bool isComputerFirst,
-            string computerSymbol,
+        private void CheckMove(string[] playerBoard,
+            string[] storedBoard,
             string playerSymbol)
         {
+            var totalFieldsChanged = 0;
 
-            return false;
+            for (var i = 0; i < playerBoard.Length; i++)
+            {
+                if (playerBoard[i] != storedBoard[i])
+                {
+                    if (totalFieldsChanged >= 1) throw new IncorrectMovementException($"Player replaced 2 or more symbols instead of one");
+                    
+                    if (storedBoard[i] != "") throw new IncorrectMovementException($"Player replaced symbol {storedBoard[i]} instead of an empty cell");
+
+                    if (playerBoard[i] != playerSymbol) throw new IncorrectMovementException($"Player used incorrect replacement symbol - (\"{playerBoard[i]}\") instead of (\"{playerSymbol}\")");
+                    
+                    totalFieldsChanged++;
+                }
+            }
         }
     }
 }
