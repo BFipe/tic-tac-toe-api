@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace webapi_tic_tac_toe.exceptions
 {
-    public class NotFoundException<T> : Exception
+    public class NotFoundException : Exception
     {
-        public NotFoundException(string text) : base($"Object not found exception in {nameof(T)} : {text}") { }
+        public NotFoundException(string from, string text) : base($"Object not found exception in {from} : {text}") { }
     }
 }

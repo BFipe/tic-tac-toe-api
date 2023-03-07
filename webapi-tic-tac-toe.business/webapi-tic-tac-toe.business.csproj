@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\webapi-tic-tac-toe.data\webapi-tic-tac-toe.data.csproj" />
-    <ProjectReference Include="..\webapi-tic-tac-toe.entities\webapi-tic-tac-toe.entities.csproj" />
   </ItemGroup>
 
 </Project>
