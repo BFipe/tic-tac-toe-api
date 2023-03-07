@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "webapi-tic-tac-toe.business
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "webapi-tic-tac-toe", "webapi-tic-tac-toe\webapi-tic-tac-toe.csproj", "{14C97A56-2A9A-476D-BB06-D56CEF6FEA5E}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{1FBE6EA7-9D3F-4DF5-948F-5424AE9D4DA6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{14C97A56-2A9A-476D-BB06-D56CEF6FEA5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14C97A56-2A9A-476D-BB06-D56CEF6FEA5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14C97A56-2A9A-476D-BB06-D56CEF6FEA5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FBE6EA7-9D3F-4DF5-948F-5424AE9D4DA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FBE6EA7-9D3F-4DF5-948F-5424AE9D4DA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FBE6EA7-9D3F-4DF5-948F-5424AE9D4DA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FBE6EA7-9D3F-4DF5-948F-5424AE9D4DA6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  webapi-tic-tac-toe:
+    image: ${DOCKER_REGISTRY-}webapitictactoe
+    build:
+      context: .
+      dockerfile: webapi-tic-tac-toe/Dockerfile
