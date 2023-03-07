@@ -15,4 +15,8 @@
     <Folder Include="Controllers\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\webapi-tic-tac-toe.business\webapi-tic-tac-toe.business.csproj" />
+  </ItemGroup>
+
 </Project>

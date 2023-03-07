@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using webapi_tic_tac_toe.business.MapConfigurations;
+using webapi_tic_tac_toe.data.LayerExtentions;
 
 namespace webapi_tic_tac_toe.business.LayerExtentions
 {
@@ -12,8 +13,9 @@ namespace webapi_tic_tac_toe.business.LayerExtentions
     {
         public static IServiceCollection AddBusinessLayerServices(this IServiceCollection services)
         {
-            services.AddAutoMapper(typeof(MapperConfigurations));
+            services.AddDataLayerServices();
 
+            services.AddAutoMapper(typeof(MapperConfigurations));
 
             return services;
         }

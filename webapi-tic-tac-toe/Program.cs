@@ -1,3 +1,5 @@
+using webapi_tic_tac_toe.business.LayerExtentions;
+
 namespace webapi_tic_tac_toe
 {
     public class Program
@@ -6,16 +8,16 @@ namespace webapi_tic_tac_toe
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddLogging();
+
+            builder.Services.AddBusinessLayerServices();
+
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
