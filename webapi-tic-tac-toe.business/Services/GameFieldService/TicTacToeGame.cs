@@ -13,7 +13,7 @@ using webapi_tic_tac_toe.exceptions;
 
 namespace webapi_tic_tac_toe.business.Services.GameFieldService
 {
-    public class TicTacToeGame
+    public class TicTacToeGame : ITicTacToeGame
     {
         private readonly IMapper _mapper;
         private readonly ILogger<TicTacToeGame> _logger;
@@ -56,11 +56,21 @@ namespace webapi_tic_tac_toe.business.Services.GameFieldService
             }
         }
 
-        public async Task<TicTacToeResponceDto> MadeMove(TicTacToeGetDto playerBoard)
+        public async Task<TicTacToeResponceDto> GetGameFieldById(string id)
+        {
+            return _mapper.Map<TicTacToeResponceDto>(await _ticTacToeRepository.GetGameByIdAsync(id));
+        }
+
+        public async Task<TicTacToeResponceDto> MakeMove(TicTacToeGetDto playerBoard)
         {
             var databaseBoard = await _ticTacToeRepository.GetGameByIdAsync(playerBoard.Id);
 
-            if (playerBoard.GameField.Length != 9 
+            if (databaseBoard.GameFinished)
+            {
+                throw new GameAlreadyFinishedException(playerBoard.Id);
+            }
+
+            if (playerBoard.GameField.Length != 9
                 || playerBoard.GameField.All(q => (q == "" || q == databaseBoard.ComputerSymbol || q == databaseBoard.PlayerSymbol)) == false)
             {
                 _logger.LogWarning($"Incorrect game field was gained during the game (player field id - {playerBoard.Id})");
@@ -78,11 +88,16 @@ namespace webapi_tic_tac_toe.business.Services.GameFieldService
             return new TicTacToeResponceDto()
             {
                 Id = databaseBoard.Id,
-                GameField= computerMovement.GameField,
+                GameField = computerMovement.GameField,
                 IsComputerWon = computerMovement.IsComputerWon,
-                IsPlayerWon= computerMovement.IsPlayerWon,
+                IsPlayerWon = computerMovement.IsPlayerWon,
                 IsDraw = computerMovement.IsDraw,
             };
+        }
+
+        public async Task DeleteGame(string id)
+        {
+            await _ticTacToeRepository.DeleteGameByIdAsync(id);
         }
 
         private void CheckMove(string[] playerBoard,
@@ -96,11 +111,11 @@ namespace webapi_tic_tac_toe.business.Services.GameFieldService
                 if (playerBoard[i] != storedBoard[i])
                 {
                     if (totalFieldsChanged >= 1) throw new IncorrectMovementException($"Player replaced 2 or more symbols instead of one");
-                    
+
                     if (storedBoard[i] != "") throw new IncorrectMovementException($"Player replaced symbol {storedBoard[i]} instead of an empty cell");
 
                     if (playerBoard[i] != playerSymbol) throw new IncorrectMovementException($"Player used incorrect replacement symbol - (\"{playerBoard[i]}\") instead of (\"{playerSymbol}\")");
-                    
+
                     totalFieldsChanged++;
                 }
             }

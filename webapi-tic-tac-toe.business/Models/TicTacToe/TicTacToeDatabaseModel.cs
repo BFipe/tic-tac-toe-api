@@ -9,7 +9,8 @@ namespace webapi_tic_tac_toe.business.Models.TicTacToe
 {
     public class TicTacToeDatabaseModel : TicTacToeGetDto
     {
-        public string ComputerSymbol { get; }
-        public string PlayerSymbol { get; }
+        public string ComputerSymbol { get; set; }
+        public string PlayerSymbol { get; set; }
+        public bool GameFinished { get; set; }
     }
 }

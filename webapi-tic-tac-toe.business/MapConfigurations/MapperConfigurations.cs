@@ -13,7 +13,8 @@ namespace webapi_tic_tac_toe.business.MapConfigurations
     {
         public MapperConfigurations()
         {
-            CreateMap<TicTacToeEntity, TicTacToeDto>().ReverseMap();
+            CreateMap<TicTacToeEntity, TicTacToeResponceDto>().ReverseMap();
+            CreateMap<TicTacToeEntity, TicTacToeGetDto>().ReverseMap();
         }
     }
 }

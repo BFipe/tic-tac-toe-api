@@ -6,14 +6,10 @@ using System.Threading.Tasks;
 
 namespace webapi_tic_tac_toe.business.BusinessDtos.TicTacToeDtos
 {
-    public class TicTacToeDto
+    public abstract class TicTacToeBasicDto
     {
-        public string Id { get; set; }
+        public virtual string Id { get; set; }
 
         public string[] GameField { get; set; }
-
-        public string ComputerSymbol { get; set; }
-
-        public string PlayerSymbol { get; set; }
     }
 }
