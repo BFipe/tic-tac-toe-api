@@ -27,8 +27,11 @@ namespace webapi_tic_tac_toe.data.Repositories
         {
             var result = await _redis.GetStringAsync(id);
 
-            if (result is null) throw new NotFoundException($"{nameof(TicTacToeRepository)}.GetGameByIdAsync", $"Game with id {id} not found");
-
+            if (result is null)
+            {
+                _logger.LogWarning($"Game with id {id} not found in {nameof(TicTacToeRepository)}.GetGameByIdAsync");
+                throw new NotFoundException($"{nameof(TicTacToeRepository)}.GetGameByIdAsync", $"Game with id {id} not found");
+            }
             var ticTacToeGame = JsonConvert.DeserializeObject<TicTacToeEntity>(result);
 
             _logger.LogInformation($"Returned info about game with id {ticTacToeGame.Id}");

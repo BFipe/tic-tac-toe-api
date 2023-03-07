@@ -17,4 +17,8 @@
     <ProjectReference Include="..\webapi-tic-tac-toe.data\webapi-tic-tac-toe.data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\ComputerMovementsService\" />
+  </ItemGroup>
+
 </Project>
