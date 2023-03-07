@@ -42,7 +42,7 @@ namespace webapi_tic_tac_toe.business.Services.ComputerPlayingService
             {
                 if (tictactoeField[i] == tictactoeField[i + 1]
                     && tictactoeField[i] == tictactoeField[i + 2]
-                    && tictactoeField[i] != winningSymbol)
+                    && tictactoeField[i] == winningSymbol)
                 {
                     return true;
                 }
@@ -52,7 +52,7 @@ namespace webapi_tic_tac_toe.business.Services.ComputerPlayingService
             {
                 if (tictactoeField[i] == tictactoeField[i + 3]
                     && tictactoeField[i] == tictactoeField[i + 6]
-                    && tictactoeField[i] != winningSymbol)
+                    && tictactoeField[i] == winningSymbol)
                 {
                     return true;
                 }
@@ -60,14 +60,14 @@ namespace webapi_tic_tac_toe.business.Services.ComputerPlayingService
 
             if (tictactoeField[0] == tictactoeField[4]
                 && tictactoeField[0] == tictactoeField[8]
-                && tictactoeField[0] != winningSymbol)
+                && tictactoeField[0] == winningSymbol)
             {
                 return true;
             }
 
             if (tictactoeField[2] == tictactoeField[4]
                 && tictactoeField[2] == tictactoeField[6]
-                && tictactoeField[2] != winningSymbol)
+                && tictactoeField[2] == winningSymbol)
             {
                 return true;
             }

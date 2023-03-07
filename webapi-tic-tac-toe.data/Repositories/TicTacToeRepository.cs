@@ -41,7 +41,7 @@ namespace webapi_tic_tac_toe.data.Repositories
 
         public async Task<TicTacToeEntity> CreateGameAsync()
         {
-            var ticTacToeGame = new TicTacToeEntity();
+            var ticTacToeGame = TicTacToeEntity.CreateGame();
 
             var serialisedGame = JsonConvert.SerializeObject(ticTacToeGame);
 

@@ -23,5 +23,17 @@ namespace webapi_tic_tac_toe.Controllers
         {
             return await _ticTacToeGame.StartGame();
         }
+
+        [HttpPost(Name = "GetCurrentState")]
+        public async Task<ActionResult<TicTacToeResponceDto>> GetCurrentState(string id)
+        {
+            return await _ticTacToeGame.GetGameFieldById(id);
+        }
+
+        [HttpPut(Name = "MakeMove")]
+        public async Task<ActionResult<TicTacToeResponceDto>> MakeMove([FromBody]TicTacToeGetDto playerBoard)
+        {
+            return await _ticTacToeGame.MakeMove(playerBoard);
+        }
     }
 }

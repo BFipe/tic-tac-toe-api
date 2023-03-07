@@ -12,20 +12,24 @@ namespace webapi_tic_tac_toe.entities.TicTacToeEntities
 
         public string[] GameField { get; set; }
 
-        public bool IsComputerFirst { get; }
-        public string ComputerSymbol { get; }
-        public string PlayerSymbol { get; }
+        public bool IsComputerFirst { get; set; }
+        public string ComputerSymbol { get; set; }
+        public string PlayerSymbol { get; set; }
 
         public bool GameFinished { get; set; }
 
-        public TicTacToeEntity() 
+        public static TicTacToeEntity CreateGame()
         {
-            Id = Guid.NewGuid().ToString();
-            GameField = new string[9] { "", "", "", "", "", "", "", "", "" };
+            var whoFirst = new Random().Next(0, 2);
+            return new TicTacToeEntity()
+            {
+                Id = Guid.NewGuid().ToString(),
+                GameField = new string[9] { "", "", "", "", "", "", "", "", "" },
 
-            IsComputerFirst = new Random().Next(0, 2) == 1 ? true : false;
-            ComputerSymbol = IsComputerFirst ? "X" : "O";
-            PlayerSymbol = IsComputerFirst ? "O" : "X";
+                IsComputerFirst = whoFirst == 1 ? true : false,
+                ComputerSymbol = whoFirst == 1 ? "X" : "O",
+                PlayerSymbol = whoFirst == 1 ? "O" : "X",
+            };
         }
     }
 }

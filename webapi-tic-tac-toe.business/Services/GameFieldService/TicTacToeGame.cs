@@ -32,27 +32,33 @@ namespace webapi_tic_tac_toe.business.Services.GameFieldService
         {
             var game = await _ticTacToeRepository.CreateGameAsync();
 
-            var gameDto = _mapper.Map<TicTacToeDatabaseModel>(game);
-
-            var computerMovement = _computer.MakeComputerMove(gameDto.GameField, game.ComputerSymbol, game.PlayerSymbol);
-
-            if (computerMovement.IsPlayerWon == false
-                && computerMovement.IsComputerWon == false
-                && computerMovement.IsDraw == false)
+            if (game.IsComputerFirst)
+            {
+                var computerMovement = _computer.MakeComputerMove(game.GameField, game.ComputerSymbol, game.PlayerSymbol);
+                if (computerMovement.IsPlayerWon == false
+                    && computerMovement.IsComputerWon == false
+                    && computerMovement.IsDraw == false)
+                {
+                    game.GameField = computerMovement.GameField;
+                    await _ticTacToeRepository.UpdateGameAsync(game);
+                    return new TicTacToeResponceDto()
+                    {
+                        Id = game.Id,
+                        GameField = computerMovement.GameField,
+                    };
+                }
+                else
+                {
+                    throw new CustomDevelopmentException($"Incorrect return while starting the game. id {game.Id}");
+                }
+            }
+            else
             {
                 return new TicTacToeResponceDto()
                 {
                     Id = game.Id,
-                    GameField = computerMovement.GameField,
-                    IsComputerWon = computerMovement.IsComputerWon,
-                    IsPlayerWon = computerMovement.IsPlayerWon,
-                    IsDraw = computerMovement.IsDraw,
+                    GameField = game.GameField,
                 };
-            }
-
-            else
-            {
-                throw new CustomDevelopmentException($"Incorrect return while starting the game. id {game.Id}");
             }
         }
 
@@ -81,9 +87,11 @@ namespace webapi_tic_tac_toe.business.Services.GameFieldService
 
             databaseBoard.GameField = playerBoard.GameField;
 
-            await _ticTacToeRepository.UpdateGameAsync(databaseBoard);
-
             var computerMovement = _computer.MakeComputerMove(databaseBoard.GameField, databaseBoard.ComputerSymbol, databaseBoard.PlayerSymbol);
+
+            databaseBoard.GameField = computerMovement.GameField;
+
+            await _ticTacToeRepository.UpdateGameAsync(databaseBoard);
 
             return new TicTacToeResponceDto()
             {
@@ -112,13 +120,15 @@ namespace webapi_tic_tac_toe.business.Services.GameFieldService
                 {
                     if (totalFieldsChanged >= 1) throw new IncorrectMovementException($"Player replaced 2 or more symbols instead of one");
 
-                    if (storedBoard[i] != "") throw new IncorrectMovementException($"Player replaced symbol {storedBoard[i]} instead of an empty cell");
+                    if (storedBoard[i] != "") throw new IncorrectMovementException($"Player replaced symbol \"{storedBoard[i]}\" instead of an empty cell");
 
                     if (playerBoard[i] != playerSymbol) throw new IncorrectMovementException($"Player used incorrect replacement symbol - (\"{playerBoard[i]}\") instead of (\"{playerSymbol}\")");
 
                     totalFieldsChanged++;
                 }
             }
+
+            if (totalFieldsChanged == 0) throw new IncorrectMovementException($"No movement was made by user");
         }
     }
 }
